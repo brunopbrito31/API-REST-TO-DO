@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.brunopbrito31.apitodo.models.entities.UserModel;
-import com.brunopbrito31.data.UserDetailsData;
+import com.brunopbrito31.apitodo.data.UserDetailsData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,7 +37,7 @@ public class JWTAutenticationFilter extends UsernamePasswordAuthenticationFilter
 
     @Override
     public Authentication attemptAuthentication(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws org.springframework.security.core.AuthenticationException {
-        
+
         try {
             UserModel usuario = new ObjectMapper().readValue(request.getInputStream(), UserModel.class);
 
@@ -60,11 +60,11 @@ public class JWTAutenticationFilter extends UsernamePasswordAuthenticationFilter
         String token = JWT.create().withSubject(dataUser.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPIRACAO))
                 .sign(Algorithm.HMAC512(TOKEN_SENHA));
-        
+
         response.getWriter().write(token);
         response.getWriter().flush();
     }
 
-    
-    
+
+
 }

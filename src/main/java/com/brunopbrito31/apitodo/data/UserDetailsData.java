@@ -1,4 +1,4 @@
-package com.brunopbrito31.data;
+package com.brunopbrito31.apitodo.data;
 
 import java.util.ArrayList;
 import java.util.Collection;

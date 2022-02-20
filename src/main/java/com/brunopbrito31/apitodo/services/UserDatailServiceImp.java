@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.brunopbrito31.apitodo.models.entities.UserModel;
 import com.brunopbrito31.apitodo.repositories.UserModelRepository;
-import com.brunopbrito31.data.UserDetailsData;
+import com.brunopbrito31.apitodo.data.UserDetailsData;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

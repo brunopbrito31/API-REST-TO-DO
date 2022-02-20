@@ -1,19 +1,14 @@
 package com.brunopbrito31.apitodo.controllers;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +23,8 @@ import com.brunopbrito31.apitodo.repositories.UserModelRepository;
 
 @RestController
 @RequestMapping("/api/users")
+@Api(value = "API REST Usuários")
+@CrossOrigin(origins="*")
 public class UserModelController {
 
     @Autowired
@@ -38,18 +35,16 @@ public class UserModelController {
 
     // Lista todos os usuários
     @GetMapping
+    @ApiOperation(value="Retorna a lista de usuários")
     public ResponseEntity<List<UserModel>> listAll(){
         return ResponseEntity.ok(usuarioModelRep.findAll());
     }
     
     // Criação do usuário
     @PostMapping("/save")
+    @ApiOperation(value="Cria um novo usuário")
     public ResponseEntity<UserModelDTO> create(@RequestBody @Valid UserModelDTO userModelDTO){
-        
-        System.out.println("Teste da senha vinda do DTO= "+userModelDTO);
         UserModel userModel = convertUserDTOToEntity(userModelDTO);
-
-        System.out.println("Teste da senha vinda da entidade= "+userModel.getPassword());
         //encrypta a senha
         userModel.setPassword(encoder.encode(userModel.getPassword())); 
         userModel = usuarioModelRep.save(userModel);
@@ -59,6 +54,7 @@ public class UserModelController {
 
     // Verifica se a senha do usuário é válida
     @GetMapping("/passwordvalidate")
+    @ApiOperation(value="Verifica se a Senha do usuário é válida")
     public ResponseEntity<Boolean> passwordValidate(@RequestParam String login, @RequestParam String password){
         
         Optional<UserModel> optUsuario = usuarioModelRep.findByLogin(login);

@@ -8,6 +8,9 @@ import com.brunopbrito31.apitodo.models.entities.Task;
 import com.brunopbrito31.apitodo.models.exceptions.BadRequestException;
 import com.brunopbrito31.apitodo.services.TaskService;
 
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/tasks")
+@Api(value = "API REST Tarefas")
 public class TaskController {
     
     @Autowired
@@ -31,6 +35,7 @@ public class TaskController {
 
     // Listar todas as tarefas do usuário
     @GetMapping
+    @ApiOperation(value="Lista todas as tarefas do usuário")
     public ResponseEntity<List<Task>> getTasks(
         @RequestAttribute String loginUser
     ){
@@ -43,6 +48,7 @@ public class TaskController {
 
     // Listar todas as tarefas ativas do usuário com ou sem filtro de prioridade
     @GetMapping("/active")
+    @ApiOperation(value="Lista todas as tarefas ativas do usuário com ou sem filtro de prioridade")
     public ResponseEntity<List<Task>> getActiveTasks(
         @RequestAttribute String loginUser,
         @RequestParam(defaultValue = "-1") Long priority // Valor aleatório mockado para controle
@@ -63,6 +69,7 @@ public class TaskController {
 
     // Busca uma tarefa especifica pelo Id dela, com verificação de usuário
     @GetMapping("/{id}")
+    @ApiOperation(value="Busca uma tarefa especifica do usuário, pelo id dela")
     public ResponseEntity<Task> getTaskById(
         @PathVariable Long id,
         @RequestAttribute String loginUser
@@ -74,8 +81,9 @@ public class TaskController {
             : ResponseEntity.notFound().build();
     }
 
-    // Criar uma nova tarefa - Falta implementar as validações
+    // Criar uma nova tarefa
     @PostMapping
+    @ApiOperation(value="Cria uma nova tarefa")
     public ResponseEntity<Task> createTask(
         @RequestAttribute String loginUser,
         @RequestBody Task task
@@ -96,6 +104,7 @@ public class TaskController {
 
     // Cancela uma tarefa atrelada ao usuário
     @PutMapping("/cancel")
+    @ApiOperation(value="Cancela uma tarefa atrelada ao usuário pelo id dela")
     public ResponseEntity<?> cancellTask(
         @RequestAttribute String loginUser,
         @RequestParam Long idTask
@@ -113,6 +122,7 @@ public class TaskController {
 
     // Atualiza uma tarefa atrelada ao usuário
     @PutMapping("/update")
+    @ApiOperation(value="Atualiza uma tarefa atrelada ao usuário")
     public ResponseEntity<?> updateTask(
         @RequestAttribute String loginUser,
         @RequestBody Task task
@@ -131,6 +141,7 @@ public class TaskController {
 
     // Finaliza uma tarefa iniciada ou em progresso
     @PutMapping("/finish")
+    @ApiOperation(value="Conclui uma tarefa iniciada ou em progresso")
     public ResponseEntity<String> finishTask(
         @RequestAttribute String loginUser,
         @RequestParam Long idTask
@@ -149,6 +160,7 @@ public class TaskController {
 
     // Remove uma tarefa atrelada ao usuário
     @DeleteMapping("/delete")
+    @ApiOperation(value="Remove uma tarefa atrelada ao usuário")
     public ResponseEntity<String> deleteTask(
         @RequestAttribute String loginUser,
         @RequestParam Long idTask

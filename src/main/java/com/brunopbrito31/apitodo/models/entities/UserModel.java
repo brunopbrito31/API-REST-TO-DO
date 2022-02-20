@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,20 +21,24 @@ import lombok.NoArgsConstructor;
 @Entity(name="tb_usuarios")
 public class UserModel {
 
+    @ApiModelProperty(value = "Id do Usuário")
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @ApiModelProperty(value = "Nome do Usuário")
     @Column(name="nome", nullable=false)
     private String name;
 
+    @ApiModelProperty(value = "Email/Login do Usuário")
     @Column(name="email",unique = true, nullable=false)
     private String login;
 
-    // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) - Impede a exposição da senha 
+    @ApiModelProperty(value = "Senha do Usuário")
     @Column(name="senha", nullable=false)
     private String password;
 
+    @ApiModelProperty(value = "Tarefas do Usuário")
     @OneToMany(mappedBy = "responsible", fetch = FetchType.LAZY)
     private List<Task> usersTasks;
 

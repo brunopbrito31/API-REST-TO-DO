@@ -15,12 +15,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
-public class JWTConfiguracao extends WebSecurityConfigurerAdapter {
+public class JWTConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDatailServiceImp usuarioService;
     private final PasswordEncoder passwordEncoder;
 
-    public JWTConfiguracao(UserDatailServiceImp usuarioService, PasswordEncoder passwordEncoder) {
+    public JWTConfiguration(UserDatailServiceImp usuarioService, PasswordEncoder passwordEncoder) {
         this.usuarioService = usuarioService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -30,11 +30,15 @@ public class JWTConfiguracao extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(usuarioService).passwordEncoder(passwordEncoder);
     }
 
+    // Todas as Rotas estão permitidas, exceto a de tarefas e usuários
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.csrf().disable().authorizeRequests() // habilitado para ambiente de producao
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/api/tasks/**").authenticated()
+                .antMatchers("/api/users/**").authenticated()
+                .anyRequest().permitAll()
+                .and().headers().frameOptions().sameOrigin() // adicionado pro h2 functionar
                 .and()
                 .addFilter(new JWTAutenticationFilter(authenticationManager()))
                 .addFilter(new JWTValidateFilter(authenticationManager()))
@@ -48,5 +52,5 @@ public class JWTConfiguracao extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**",corsConfiguration);
         return source;
     }
-    
+
 }
