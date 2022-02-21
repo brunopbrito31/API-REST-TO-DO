@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import com.brunopbrito31.apitodo.controllers.TaskController;
+import com.brunopbrito31.apitodo.controllers.UserModelController;
+import com.brunopbrito31.apitodo.models.auxiliar.UserAut;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,7 +56,9 @@ public class JWTValidateFilter extends BasicAuthenticationFilter{
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         
         // Seta o UserName - Login/Email na request
-        request.setAttribute("loginUser", authenticationToken.getPrincipal().toString() );
+//        request.setAttribute("loginUser", authenticationToken.getPrincipal().toString() );
+
+        UserAut.loginUser = authenticationToken.getPrincipal().toString();
 
         // Inserir o nome do usuário na request como atributo
         chain.doFilter(request, response);
