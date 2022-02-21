@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserModelRepository extends JpaRepository<UserModel, Long> {
-    
 
     public Optional<UserModel> findByLogin(String login);
 }

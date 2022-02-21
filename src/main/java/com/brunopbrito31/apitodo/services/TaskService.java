@@ -3,6 +3,7 @@ package com.brunopbrito31.apitodo.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.brunopbrito31.apitodo.models.auxiliar.Paginator;
 import com.brunopbrito31.apitodo.models.entities.Task;
 import com.brunopbrito31.apitodo.models.entities.UserModel;
 import com.brunopbrito31.apitodo.models.enums.TaskStatus;
@@ -26,6 +27,28 @@ public class TaskService {
     public List<Task> allTasksByUser(String login){
 
         List<Task> taskSearched = taskRepository.findByResponsible(login);
+
+        return taskSearched;
+    }
+
+    // Retorna todas as tarefas atreladas ao usuário (Com Paginação)
+    public List<Task> allTasksByUserWithPagination(String login, Integer pageNo, Integer pageSize){
+        // Quantidade total de tarefas
+        Long totalItems = taskRepository.findByResponsibleCount(login);
+
+        // Objeto de paginação
+        Paginator paginator = new Paginator(
+                pageNo,
+                pageSize,
+                totalItems
+        );
+
+        // Faz a busca das tarefas com a paginação
+        List<Task> taskSearched = taskRepository.findByResponsibleWithPagination(
+                login,
+                paginator.getStartLimit(),
+                pageSize
+        );
 
         return taskSearched;
     }
@@ -150,6 +173,30 @@ public class TaskService {
             }
 
         // Caso a tarefa esteja associada a outro usuário
+        }else{
+            throw new BadRequestException("Tarefa não Encontrada!");
+        }
+    }
+
+    // Muda o Status de uma tarefa do usuário com o status de aberta para em progresso
+    public void makeTask(String login, Long idTask){
+        Optional<Task> taskSearched = taskByIdValided(idTask);
+
+        // Verifica se o usuário presente no token é o responsável pela tarefa, em caso positivo cancela a tarefa
+        if(taskSearched.get().getResponsible().getLogin().equals(login)){
+            Task taskTemp = taskSearched.get();
+            TaskStatus status = taskTemp.getStatus();
+
+            // Verifica a tarefa está apta para o cancelamento
+            if(status == TaskStatus.OPEN){
+                taskTemp.setStatus(TaskStatus.INPROGRESS);
+                taskRepository.save(taskTemp);
+
+            }else{
+                throw new BadRequestException("Só é possível realizar uma tarefa que esteja com o status de aberto!");
+            }
+
+            // Caso a tarefa esteja associada a outro usuário
         }else{
             throw new BadRequestException("Tarefa não Encontrada!");
         }

@@ -36,6 +36,7 @@ public class JWTConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests() // habilitado para ambiente de producao
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers("/api/tasks/**").authenticated()
+                .antMatchers(HttpMethod.POST,"/api/tasks/save").permitAll()
                 .antMatchers("/api/users/**").authenticated()
                 .anyRequest().permitAll()
                 .and().headers().frameOptions().sameOrigin() // adicionado pro h2 functionar
