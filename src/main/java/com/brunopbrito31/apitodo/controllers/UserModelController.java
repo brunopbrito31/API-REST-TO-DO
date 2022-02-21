@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -36,8 +37,8 @@ public class UserModelController {
     // Lista todos os usuários
     @GetMapping
     @ApiOperation(value="Retorna a lista de usuários")
-    public ResponseEntity<List<UserModel>> listAll(){
-        return ResponseEntity.ok(usuarioModelRep.findAll());
+    public ResponseEntity<List<UserModelDTO>> listAll(){
+        return ResponseEntity.ok(usuarioModelRep.findAll().stream().map(user -> convertUserEntityToDTO(user)).collect(Collectors.toList()));
     }
     
     // Criação do usuário
